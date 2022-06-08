@@ -33,7 +33,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ChatRoomMessage extends Message {
+public class ChatRoomMessage {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
