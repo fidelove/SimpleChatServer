@@ -6,4 +6,6 @@ import com.smart.simplechat.model.ChatRoom;
 
 public interface ChatRoomRepository extends CrudRepository<ChatRoom, Long> {
 
+	boolean existsByChatRoomName(String chatRoomName);
+
 }

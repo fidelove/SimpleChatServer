@@ -8,7 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.lang.NonNull;
 
@@ -29,13 +31,15 @@ import lombok.ToString;
 public class ChatRoom {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "chatroom_id_sequence")
+	@SequenceGenerator(initialValue = 1, name = "chatroom_id_sequence", allocationSize = 1)
 	@Column(name = "chatroom_id")
-	@NonNull
 	@Setter(value = AccessLevel.PROTECTED)
 	private Long id;
 
 	@Column(name = "chatroom_name")
+	@NotNull
+	@NonNull
 	private String chatRoomName;
 
 	@OneToMany(mappedBy = "chatRoomId")

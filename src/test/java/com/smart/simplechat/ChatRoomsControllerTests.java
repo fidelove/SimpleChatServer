@@ -1,5 +1,10 @@
 package com.smart.simplechat;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -9,12 +14,16 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smart.simplechat.model.ChatRoom;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
@@ -35,9 +44,18 @@ class ChatRoomsControllerTests {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	@Order(1)
 	public void listExistingChatRooms() throws Exception {
+
+		String uri = "/api/v1/rooms";
+		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+
+		assertEquals(200, mvcResult.getResponse().getStatus());
+		List<ChatRoom> allChatRooms = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), List.class);
+		assertEquals("There should be 10 chat rooms created", 10, allChatRooms.size());
 	}
 
 	@Test
@@ -48,11 +66,33 @@ class ChatRoomsControllerTests {
 	@Test
 	@Order(3)
 	public void createChatRoomOk() throws Exception {
+
+		String uri = "/api/v1/rooms";
+		ChatRoom newChatRoom = new ChatRoom();
+		newChatRoom.setChatRoomName("chatroom 11");
+		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
+				.content(objectMapper.writeValueAsString(newChatRoom)).contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+
+		assertEquals(201, mvcResult.getResponse().getStatus());
+		String locationHeader = mvcResult.getResponse().getHeader("Location");
+		assertTrue("There should be the Location header containing the path to the created resource",
+				locationHeader.contains("/api/v1/room/11"));
+		ChatRoom createdChatRoom = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ChatRoom.class);
+		assertEquals("The new created chat room ID should be 11", 11L, createdChatRoom.getId().longValue());
 	}
 
 	@Test
 	@Order(4)
 	public void createChatRoomNameBadInput() throws Exception {
+
+		String uri = "/api/v1/rooms";
+		ChatRoom newChatRoom = new ChatRoom();
+		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
+				.content(objectMapper.writeValueAsString(newChatRoom)).contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+
+		assertEquals(400, mvcResult.getResponse().getStatus());
 	}
 
 	@Test
@@ -63,6 +103,16 @@ class ChatRoomsControllerTests {
 	@Test
 	@Order(6)
 	public void createChatRoomNameNameAlreadyExists() throws Exception {
+
+		String uri = "/api/v1/rooms";
+		ChatRoom newChatRoom = new ChatRoom();
+		newChatRoom.setChatRoomName("chatroom 10");
+		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
+				.content(objectMapper.writeValueAsString(newChatRoom)).contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andReturn();
+
+		assertEquals(409, mvcResult.getResponse().getStatus());
+		assertEquals("Room name already exists", mvcResult.getResponse().getErrorMessage());
 	}
 
 }
