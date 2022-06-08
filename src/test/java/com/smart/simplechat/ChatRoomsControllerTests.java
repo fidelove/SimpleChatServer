@@ -79,7 +79,7 @@ class ChatRoomsControllerTests {
 		assertTrue("There should be the Location header containing the path to the created resource",
 				locationHeader.contains("/api/v1/room/11"));
 		ChatRoom createdChatRoom = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ChatRoom.class);
-		assertEquals("The new created chat room ID should be 11", 11L, createdChatRoom.getId().longValue());
+		assertEquals("The new created chat room ID should be 11", 11, createdChatRoom.getId().longValue());
 	}
 
 	@Test
@@ -114,5 +114,4 @@ class ChatRoomsControllerTests {
 		assertEquals(409, mvcResult.getResponse().getStatus());
 		assertEquals("Room name already exists", mvcResult.getResponse().getErrorMessage());
 	}
-
 }

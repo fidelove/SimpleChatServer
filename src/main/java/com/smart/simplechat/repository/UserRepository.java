@@ -6,4 +6,6 @@ import com.smart.simplechat.model.User;
 
 public interface UserRepository extends CrudRepository<User, Long> {
 
+	boolean existsByUserName(String userName);
+
 }
