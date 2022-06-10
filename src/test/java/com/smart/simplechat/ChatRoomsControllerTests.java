@@ -60,11 +60,6 @@ class ChatRoomsControllerTests {
 
 	@Test
 	@Order(2)
-	public void listExistingChatRoomsUserNotAuthenticated() throws Exception {
-	}
-
-	@Test
-	@Order(3)
 	public void createChatRoomOk() throws Exception {
 
 		String uri = "/api/v1/rooms";
@@ -78,12 +73,10 @@ class ChatRoomsControllerTests {
 		String locationHeader = mvcResult.getResponse().getHeader("Location");
 		assertTrue("There should be the Location header containing the path to the created resource",
 				locationHeader.contains("/api/v1/room/11"));
-		ChatRoom createdChatRoom = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ChatRoom.class);
-		assertEquals("The new created chat room ID should be 11", 11, createdChatRoom.getId().longValue());
 	}
 
 	@Test
-	@Order(4)
+	@Order(2)
 	public void createChatRoomNameBadInput() throws Exception {
 
 		String uri = "/api/v1/rooms";
@@ -96,12 +89,7 @@ class ChatRoomsControllerTests {
 	}
 
 	@Test
-	@Order(5)
-	public void createChatRoomNameUserNotAuthenticated() throws Exception {
-	}
-
-	@Test
-	@Order(6)
+	@Order(4)
 	public void createChatRoomNameNameAlreadyExists() throws Exception {
 
 		String uri = "/api/v1/rooms";

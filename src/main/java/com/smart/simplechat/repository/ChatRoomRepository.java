@@ -2,9 +2,9 @@ package com.smart.simplechat.repository;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.smart.simplechat.model.ChatRoom;
+import com.smart.simplechat.repository.model.ChatRoomDAO;
 
-public interface ChatRoomRepository extends CrudRepository<ChatRoom, Long> {
+public interface ChatRoomRepository extends CrudRepository<ChatRoomDAO, Long> {
 
 	boolean existsByChatRoomName(String chatRoomName);
 

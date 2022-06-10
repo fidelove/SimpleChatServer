@@ -60,11 +60,6 @@ class UsersControllerTests {
 
 	@Test
 	@Order(2)
-	public void createUserNotAuthenticated() throws Exception {
-	}
-
-	@Test
-	@Order(3)
 	public void createUserBadInput() throws Exception {
 
 		String uri = "/api/v1/user";
@@ -77,7 +72,7 @@ class UsersControllerTests {
 	}
 
 	@Test
-	@Order(4)
+	@Order(3)
 	public void createUserDuplicatedUserName() throws Exception {
 
 		String uri = "/api/v1/user";
@@ -91,5 +86,4 @@ class UsersControllerTests {
 		assertEquals(409, mvcResult.getResponse().getStatus());
 		assertEquals("User name already exists", mvcResult.getResponse().getErrorMessage());
 	}
-
 }

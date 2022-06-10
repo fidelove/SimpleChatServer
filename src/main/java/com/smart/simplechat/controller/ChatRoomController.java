@@ -2,13 +2,13 @@ package com.smart.simplechat.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
-import org.glassfish.jersey.internal.guava.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.smart.simplechat.model.ChatRoom;
-import com.smart.simplechat.model.ChatRoomMessage;
 import com.smart.simplechat.repository.ChatRoomRepository;
+import com.smart.simplechat.repository.model.ChatRoomDAO;
+import com.smart.simplechat.repository.model.ChatRoomMessageDAO;
+import com.smart.simplechat.util.Mapper;
 
 /**
  * 
@@ -44,7 +46,10 @@ public class ChatRoomController {
 	 */
 	@GetMapping("/rooms")
 	public List<ChatRoom> getAllChatRooms() {
-		return Lists.newArrayList(chatRoomRepo.findAll());
+
+		// Get all chat rooms, and convert them
+		return StreamSupport.stream(chatRoomRepo.findAll().spliterator(), true).map(Mapper::mapChatRoom)
+				.collect(Collectors.toList());
 	}
 
 	/**
@@ -53,11 +58,11 @@ public class ChatRoomController {
 	 * @param chatRoom Object containing only the chat room name
 	 * @return The chat room object created
 	 * 
-	 * @exception ResponseStatusException HTTP response 409 when the room name
-	 *                                    already exists
+	 * @exception ResponseStatusException with HttpStatus.CONFLICT when the room
+	 *                                    name already exists
 	 */
 	@PostMapping("/rooms")
-	public ResponseEntity<ChatRoom> createChatRoom(@RequestBody @Valid ChatRoom chatRoom) {
+	public ResponseEntity<Void> createChatRoom(@RequestBody @Valid ChatRoom chatRoom) {
 
 		// If name already exists, throw exception
 		if (chatRoomRepo.existsByChatRoomName(chatRoom.getChatRoomName())) {
@@ -65,9 +70,13 @@ public class ChatRoomController {
 		}
 
 		// Save chatroom and return created instance
-		chatRoom.setMessages(new ArrayList<ChatRoomMessage>());
-		ChatRoom savedChatRoom = chatRoomRepo.save(chatRoom);
-		return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON)
-				.header("Location", String.format("/api/v1/room/%d", savedChatRoom.getId())).body(savedChatRoom);
+		ChatRoomDAO chatRoomDAO = new ChatRoomDAO(null, chatRoom.getChatRoomName(),
+				new ArrayList<ChatRoomMessageDAO>());
+		// TODO: borrar
+//		chatRoomDAO.setChatRoomName(chatRoom.getChatRoomName());
+//		chatRoomDAO.setMessages(new ArrayList<ChatRoomMessageDAO>());
+		ChatRoomDAO savedChatRoom = chatRoomRepo.save(chatRoomDAO);
+		return ResponseEntity.status(HttpStatus.CREATED)
+				.header("Location", String.format("/api/v1/room/%d", savedChatRoom.getId())).build();
 	}
 }
