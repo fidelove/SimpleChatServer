@@ -18,7 +18,6 @@ import lombok.ToString;
 @ToString
 public class User {
 
-	@NonNull
 	@Setter(value = AccessLevel.PROTECTED)
 	private Long id;
 

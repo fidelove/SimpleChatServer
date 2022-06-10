@@ -1,7 +1,5 @@
 package com.smart.simplechat.model;
 
-import java.util.List;
-
 import javax.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
@@ -21,7 +19,5 @@ public class ChatRoom {
 
 	@NotEmpty
 	private String chatRoomName;
-
-	private List<ChatRoomMessage> messages;
 
 }

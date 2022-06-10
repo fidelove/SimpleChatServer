@@ -27,8 +27,7 @@ public class Mapper {
 	 * @return The ChatRoom
 	 */
 	public static ChatRoom mapChatRoom(ChatRoomDAO chatRoom) {
-		return new ChatRoom(chatRoom.getId(), chatRoom.getChatRoomName(),
-				chatRoom.getMessages().stream().map(Mapper::mapChatRoomMessage).collect(Collectors.toList()));
+		return new ChatRoom(chatRoom.getId(), chatRoom.getChatRoomName());
 	}
 
 	/**
@@ -38,8 +37,8 @@ public class Mapper {
 	 * @return The ChatRoomMessage
 	 */
 	public static ChatRoomMessage mapChatRoomMessage(ChatRoomMessageDAO chatRoomMessage) {
-		return new ChatRoomMessage(chatRoomMessage.getId(), chatRoomMessage.getChatRoomId().getId(),
-				chatRoomMessage.getCreator().getId(), chatRoomMessage.getCreated(), chatRoomMessage.getMessage());
+		return new ChatRoomMessage(chatRoomMessage.getId(), chatRoomMessage.getCreator().getUserName(),
+				chatRoomMessage.getCreated(), chatRoomMessage.getMessage());
 	}
 
 	/**
