@@ -24,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smart.simplechat.model.ChatRoom;
+import com.smart.simplechat.util.Constants;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
@@ -70,7 +71,7 @@ class ChatRoomsControllerTests {
 				.andReturn();
 
 		assertEquals(201, mvcResult.getResponse().getStatus());
-		String locationHeader = mvcResult.getResponse().getHeader("Location");
+		String locationHeader = mvcResult.getResponse().getHeader(Constants.LOCATION_HEADER);
 		assertTrue("There should be the Location header containing the path to the created resource",
 				locationHeader.contains("/api/v1/room/11"));
 	}

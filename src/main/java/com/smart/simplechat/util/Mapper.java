@@ -13,7 +13,7 @@ import com.smart.simplechat.repository.model.UserDAO;
 
 /**
  * 
- * Class in charge of map DAOs into model
+ * Class in charge of mapping DAOs into models
  * 
  * @author fidel
  *
@@ -24,7 +24,7 @@ public class Mapper {
 	 * Maps a ChatRoomDAO into a ChatRoom
 	 * 
 	 * @param chatRoom The ChatRoomDAO
-	 * @return The ChatRoom
+	 * @return The mapped instance of the ChatRoom
 	 */
 	public static ChatRoom mapChatRoom(ChatRoomDAO chatRoom) {
 		return new ChatRoom(chatRoom.getId(), chatRoom.getChatRoomName());
@@ -34,25 +34,33 @@ public class Mapper {
 	 * Maps a ChatRoomMessageDAO into a ChatRoomMessage
 	 * 
 	 * @param chatRoomMessage The ChatRoomMessageDAO
-	 * @return The ChatRoomMessage
+	 * @return The mapped instance of the ChatRoomMessage
 	 */
 	public static ChatRoomMessage mapChatRoomMessage(ChatRoomMessageDAO chatRoomMessage) {
-		return new ChatRoomMessage(chatRoomMessage.getId(), chatRoomMessage.getCreator().getUserName(),
-				chatRoomMessage.getCreated(), chatRoomMessage.getMessage());
+		return new ChatRoomMessage(chatRoomMessage.getCreator().getUserName(), chatRoomMessage.getCreated(),
+				chatRoomMessage.getMessage());
 	}
 
 	/**
 	 * 
+	 * Maps a PrivateMessageDAO into a PrivateMessage
 	 * 
-	 * 
-	 * @param privateMessage
-	 * @return
+	 * @param privateMessage The PrivateMessageDAO
+	 * @return The mapped instance of the PrivateMessage
 	 */
 	public static PrivateMessage mapPrivateMessage(PrivateMessageDAO privateMessage) {
-		return new PrivateMessage(privateMessage.getId(), privateMessage.getCreator().getId(),
-				privateMessage.getDestination().getId(), privateMessage.getCreated(), privateMessage.getMessage());
+		return new PrivateMessage(privateMessage.getCreator().getUserName(),
+				privateMessage.getDestination().getUserName(), privateMessage.getCreated(),
+				privateMessage.getMessage());
 	}
 
+	/**
+	 * 
+	 * Maps a UserDAO into a User
+	 * 
+	 * @param user The UserDAO
+	 * @return The mapped instance of the User
+	 */
 	public static User mapUser(UserDAO user) {
 		return new User(user.getId(), user.getUserName(), user.getUserPassword(),
 				user.getPrivateMessages().stream().map(Mapper::mapPrivateMessage).collect(Collectors.toList()));

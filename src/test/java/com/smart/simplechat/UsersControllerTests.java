@@ -54,30 +54,15 @@ class UsersControllerTests {
 				.andReturn();
 
 		assertEquals(201, mvcResult.getResponse().getStatus());
-		User createdUser = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), User.class);
-		assertEquals("The new created user should have ID 6", 6, createdUser.getId().longValue());
 	}
 
 	@Test
 	@Order(2)
-	public void createUserBadInput() throws Exception {
-
-		String uri = "/api/v1/user";
-		User newUser = new User();
-		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
-				.content(objectMapper.writeValueAsString(newUser)).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
-
-		assertEquals(400, mvcResult.getResponse().getStatus());
-	}
-
-	@Test
-	@Order(3)
 	public void createUserDuplicatedUserName() throws Exception {
 
 		String uri = "/api/v1/user";
 		User newUser = new User();
-		newUser.setUserName("user 5");
+		newUser.setUserName("user5");
 		newUser.setUserPassword("password");
 		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)
 				.content(objectMapper.writeValueAsString(newUser)).contentType(MediaType.APPLICATION_JSON_VALUE))

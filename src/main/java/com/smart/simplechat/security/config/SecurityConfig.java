@@ -1,6 +1,5 @@
 package com.smart.simplechat.security.config;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,14 +14,11 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @SuppressWarnings("deprecation")
-public class ChatRoomWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public PasswordEncoder delegatingPasswordEncoder() {
@@ -39,20 +35,8 @@ public class ChatRoomWebSecurityConfigurerAdapter extends WebSecurityConfigurerA
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and()
-				.authorizeRequests().anyRequest().authenticated().and().httpBasic().and().logout()
+		http.cors().disable().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+				.and().authorizeRequests().anyRequest().authenticated().and().httpBasic().and().logout()
 				.logoutUrl("/api/v1/logout").deleteCookies("JSESSIONID").invalidateHttpSession(true);
-	}
-
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("*"));
-		configuration.setAllowedMethods(Arrays.asList("*"));
-		configuration.setAllowedHeaders(Arrays.asList("*"));
-		configuration.setAllowCredentials(true);
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
 	}
 }

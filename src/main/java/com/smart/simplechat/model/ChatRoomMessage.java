@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,9 +22,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class ChatRoomMessage {
-
-	@Setter(value = AccessLevel.PROTECTED)
-	private Long id;
 
 	private String creator;
 

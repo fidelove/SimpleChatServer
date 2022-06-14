@@ -1,0 +1,86 @@
+<html>
+
+<head>
+	<title>Simple Chat Server</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"
+		integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
+		integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript">
+		var stompClient = null;
+
+		function setConnected(connected) {
+			document.getElementById('connect').disabled = connected;
+			document.getElementById('disconnect').disabled = !connected;
+			document.getElementById('conversationDiv').style.visibility
+				= connected ? 'visible' : 'hidden';
+			document.getElementById('response').innerHTML = '';
+		}
+
+		function connect() {
+		document.cookie="JSESSIONID=" + document.getElementById("jsessionid").value + "; Path=/; HttpOnly;";
+			var socket = new SockJS('http://localhost:8080/rooms');
+			stompClient = Stomp.over(socket);
+			stompClient.connect({}, function (frame) {
+				setConnected(true);
+				console.log('Connected: ' + frame);
+				stompClient.subscribe(document.getElementById("subscription-type").value, function (messageOutput) {
+					showMessageOutput(JSON.parse(messageOutput.body));
+				});
+			});
+		}
+
+		function disconnect() {
+			if (stompClient != null) {
+				stompClient.disconnect();
+			}
+			setConnected(false);
+			console.log("Disconnected");
+		}
+
+		function showMessageOutput(messageOutput) {
+			var response = document.getElementById('response');
+			var p = document.createElement('p');
+			p.style.wordWrap = 'break-word';
+			p.appendChild(document.createTextNode(messageOutput.creator + ": "
+				+ messageOutput.message + " (" + messageOutput.created + ")"));
+			response.appendChild(p);
+		}
+	</script>
+</head>
+
+<body onload="disconnect()">
+	<div>
+		<label>Enter the JSESSIONID:</label>
+		<br />
+		<br />
+		<div>
+			<input type="text" id="jsessionid" placeholder="JSESSIONID" size="42"/>
+		</div>		
+		<br />
+
+		<label>Choose a subscription type:</label>
+		<select id="subscription-type">
+			<option value="/queue/rooms/1/subscribe">Chat Room</option>
+			<option value="/user/queue/private-message">Private Message</option>
+		</select>
+
+		<br /><br />
+	</div>
+	<div>
+		<button id="connect" onclick="connect();">Connect</button>
+		<button id="disconnect" disabled="disabled" onclick="disconnect();">
+			Disconnect
+		</button>
+	</div>
+	<br />
+	<div id="conversationDiv">
+		<p id="response"></p>
+	</div>
+	</div>
+
+</body>
+
+</html>

@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +52,8 @@ public class UserController {
 		}
 
 		// Otherwise, store and return an active user
-		UserDAO userDao = new UserDAO(user.getUserName(), user.getUserPassword(), true,
+		UserDAO userDao = new UserDAO(user.getUserName(),
+				PasswordEncoderFactories.createDelegatingPasswordEncoder().encode(user.getUserPassword()), true,
 				new ArrayList<PrivateMessageDAO>());
 		userRepo.save(userDao);
 		return ResponseEntity.status(HttpStatus.CREATED).build();

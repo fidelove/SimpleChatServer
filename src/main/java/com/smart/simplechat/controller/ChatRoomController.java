@@ -22,6 +22,7 @@ import com.smart.simplechat.model.ChatRoom;
 import com.smart.simplechat.repository.ChatRoomRepository;
 import com.smart.simplechat.repository.model.ChatRoomDAO;
 import com.smart.simplechat.repository.model.ChatRoomMessageDAO;
+import com.smart.simplechat.util.Constants;
 import com.smart.simplechat.util.Mapper;
 
 /**
@@ -72,11 +73,8 @@ public class ChatRoomController {
 		// Save chatroom and return created instance
 		ChatRoomDAO chatRoomDAO = new ChatRoomDAO(null, chatRoom.getChatRoomName(),
 				new ArrayList<ChatRoomMessageDAO>());
-		// TODO: borrar
-//		chatRoomDAO.setChatRoomName(chatRoom.getChatRoomName());
-//		chatRoomDAO.setMessages(new ArrayList<ChatRoomMessageDAO>());
 		ChatRoomDAO savedChatRoom = chatRoomRepo.save(chatRoomDAO);
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.header("Location", String.format("/api/v1/room/%d", savedChatRoom.getId())).build();
+				.header(Constants.LOCATION_HEADER, String.format("/api/v1/room/%d", savedChatRoom.getId())).build();
 	}
 }

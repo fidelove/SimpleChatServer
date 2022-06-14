@@ -25,11 +25,9 @@ import lombok.ToString;
 @ToString
 public class PrivateMessage {
 
-	private Long id;
+	private String creator;
 
-	private Long creator;
-
-	private Long destination;
+	private String destination;
 
 	@NonNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

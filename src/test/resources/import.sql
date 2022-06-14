@@ -1,8 +1,8 @@
-INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(1, true, 'user1', 'password');
-INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(2, true, 'user2', 'password');
-INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(3, true, 'user3', 'password');
-INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(4, true, 'user4', 'password');
-INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(5, true, 'user5', 'password');
+INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(1, true, 'user1', '{noop}password');
+INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(2, true, 'user2', '{noop}password');
+INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(3, true, 'user3', '{noop}password');
+INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(4, true, 'user4', '{noop}password');
+INSERT INTO public.users (user_id, user_active, user_name, user_password) VALUES(5, true, 'user5', '{noop}password');
 
 DROP SEQUENCE public.user_id_sequence;
 CREATE SEQUENCE public.user_id_sequence INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 6 CACHE 1 NO CYCLE;

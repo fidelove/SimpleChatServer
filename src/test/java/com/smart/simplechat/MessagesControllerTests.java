@@ -74,7 +74,7 @@ class MessagesControllerTests {
 	@Order(4)
 	public void listMessagesFromChatRoomChatRoomDoesntExist() throws Exception {
 
-		String uri = "/api/v1/room/11/messages";
+		String uri = "/api/v1/room/100/messages";
 		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
 
@@ -116,9 +116,10 @@ class MessagesControllerTests {
 
 	@Test
 	@Order(7)
+	@WithUserDetails("user1")
 	public void postMessageToChatRoomChatRoomDoesntExist() throws Exception {
 
-		String uri = "/api/v1/room/11/messages";
+		String uri = "/api/v1/room/100/messages";
 		ChatRoomMessage newMessage = new ChatRoomMessage();
 		newMessage.setMessage("new message");
 		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(uri)

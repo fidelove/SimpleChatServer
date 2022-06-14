@@ -20,10 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.smart.simplechat.model.ChatRoom;
+import com.smart.simplechat.messaging.controller.MessagingController;
 import com.smart.simplechat.model.ChatRoomMessage;
 import com.smart.simplechat.model.PrivateMessage;
-import com.smart.simplechat.model.User;
 import com.smart.simplechat.repository.ChatRoomMessageRepository;
 import com.smart.simplechat.repository.ChatRoomRepository;
 import com.smart.simplechat.repository.PrivateMessageRepository;
@@ -59,20 +58,8 @@ public class MessageController {
 	@Autowired
 	PrivateMessageRepository privateMessageRepo;
 
-	/**
-	 * 
-	 * If the chat room doesn't exists throws an exception If the chat room exists,
-	 * it's returned
-	 * 
-	 * @param roomId The ID
-	 * @return The object containing the room object
-	 * 
-	 * @exception ResponseStatusException with HttpStatus.NOT_FOUND when the room
-	 *                                    doesn't exist
-	 */
-	private ChatRoom getChatRoom(Long roomId) {
-		return Mapper.mapChatRoom(getChatRoomDAO(roomId));
-	}
+	@Autowired
+	MessagingController messagingController;
 
 	/**
 	 * 
@@ -93,16 +80,6 @@ public class MessageController {
 		}
 
 		return chatRoom.get();
-	}
-
-	/**
-	 * Return the object containing the info about the session user
-	 * 
-	 * @return Object containing the information about the user
-	 */
-	private User getCurrentUser() {
-		// Current user is identified, so it must be in DDBB
-		return Mapper.mapUser(getCurrentUserDAO());
 	}
 
 	/**
@@ -171,7 +148,10 @@ public class MessageController {
 		// Fill the message information and save it to the DDBB
 		ChatRoomMessageDAO chatRoomMessage = new ChatRoomMessageDAO(null, existingChatRoom, getCurrentUserDAO(),
 				LocalDateTime.now(), message.getMessage());
-		chatRoomMessageRepo.save(chatRoomMessage);
+		chatRoomMessage = chatRoomMessageRepo.save(chatRoomMessage);
+
+		// Send message to subscriptors
+		messagingController.sendChatRoomMessage(roomId, Mapper.mapChatRoomMessage(chatRoomMessage));
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
@@ -201,7 +181,10 @@ public class MessageController {
 		// Fill the message information and save it to the DDBB
 		PrivateMessageDAO privateMessage = new PrivateMessageDAO(null, getCurrentUserDAO(), userDestination.get(),
 				LocalDateTime.now(), message.getMessage());
-		privateMessageRepo.save(privateMessage);
+		privateMessage = privateMessageRepo.save(privateMessage);
+
+		// Send the messahe to the user, in case it's subscribed
+		messagingController.sendPrivateMessage(Mapper.mapPrivateMessage(privateMessage));
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
