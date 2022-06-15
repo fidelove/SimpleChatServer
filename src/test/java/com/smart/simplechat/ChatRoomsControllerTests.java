@@ -29,6 +29,7 @@ import com.smart.simplechat.util.Constants;
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
 @SpringBootTest
+@Order(1)
 class ChatRoomsControllerTests {
 
 	private MockMvc mvc;

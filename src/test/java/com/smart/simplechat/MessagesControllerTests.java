@@ -29,6 +29,7 @@ import com.smart.simplechat.model.PrivateMessage;
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
 @SpringBootTest
+@Order(2)
 class MessagesControllerTests {
 
 	private MockMvc mvc;

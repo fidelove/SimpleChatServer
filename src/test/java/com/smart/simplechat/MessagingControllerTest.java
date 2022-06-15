@@ -48,6 +48,7 @@ import com.smart.simplechat.util.Constants;
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Order(3)
 public class MessagingControllerTest {
 
 	@Value("${local.server.port}")

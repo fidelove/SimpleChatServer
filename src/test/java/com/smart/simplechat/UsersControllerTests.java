@@ -25,6 +25,7 @@ import com.smart.simplechat.model.User;
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(OrderAnnotation.class)
 @SpringBootTest
+@Order(4)
 class UsersControllerTests {
 
 	private MockMvc mvc;

@@ -12,7 +12,6 @@ import com.smart.simplechat.repository.model.PrivateMessageDAO;
 import com.smart.simplechat.repository.model.UserDAO;
 
 /**
- * 
  * Class in charge of mapping DAOs into models
  * 
  * @author fidel
@@ -42,7 +41,6 @@ public class Mapper {
 	}
 
 	/**
-	 * 
 	 * Maps a PrivateMessageDAO into a PrivateMessage
 	 * 
 	 * @param privateMessage The PrivateMessageDAO
