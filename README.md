@@ -110,6 +110,7 @@ Execute the Simple Chat Server
 
 The only requirement to execute the server, is having a ```Postgres``` database running and listening in the port 5432. The username is ```postgres``` and the password ```postgrespw```.
 
+## Execution
 
 
 The server can be executed with this command:
